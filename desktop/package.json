@@ -1,0 +1,14 @@
+{
+  "name": "Microbin desktop",
+  "version": "1.0.0",
+  "description": "The Desktop client for microbin",
+  "main": "main.js",
+  "author": "Dhruva Sambrani",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "19.1.9"
+  }
+}
