@@ -1,1 +1,4 @@
 node_modules
+dist/*
+!dist/microbin-desktop-1.0.0.*
+!dist/microbin-desktop*.exe
