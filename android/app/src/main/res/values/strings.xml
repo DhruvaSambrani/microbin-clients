@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Microbin Client</string>
+    <string name="instance_url">Instance URL</string>
+</resources>

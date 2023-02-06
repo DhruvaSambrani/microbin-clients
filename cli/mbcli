@@ -15,7 +15,7 @@ argparser = argparse.ArgumentParser(
 argparser.add_argument(
     '-f',
     dest="file",
-    type=argparse.FileType('r'),
+    type=argparse.FileType('rb'),
     default=None
 )
 argparser.add_argument(
