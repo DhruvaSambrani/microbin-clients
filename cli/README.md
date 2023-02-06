@@ -15,4 +15,7 @@ Upload stuff to your bin from the CLI
 
 1. Create a QR Code for the uploaded paste: `mbcli -t "This is a test" | qrencode`
 2. Notify on upload: `notify-send "Microbin Client" $(mbcli -t "This is a test")`
+3. Delete all pasta: `./mbcli -l -lp | sed "s/pasta/remove/" | xargs -I {} curl -sL {}  > /dev/null`
+4. Download all raw content into single file: `./mbcli -l -lr | xargs -I {} curl -sL {}  >> allcontent`
+5. Select file and download: `curl -sLO $(./mbcli -l -lr | fzf)`
 

@@ -3,6 +3,7 @@
 import argparse
 import os
 import requests
+import re
 
 url = ""
 with open(os.path.expanduser("~/.config/microbin-clients/server")) as f:
@@ -13,24 +14,58 @@ argparser = argparse.ArgumentParser(
     description="A command line client to upload files or text to your microbin instance",
 )
 argparser.add_argument(
+    '-l',
+    dest="list",
+    help="List pasta links on server. Atleast one of -lf, -lu, -lr, -lp must be set",
+    action='store_true'
+)
+argparser.add_argument(
+    '-lr',
+    dest="listraw",
+    help="List raw links on server. Needs -l",
+    action='store_true'
+)
+argparser.add_argument(
+    '-lp',
+    dest="listpasta",
+    help="List pastas on server. Needs -l",
+    action='store_true'
+)
+argparser.add_argument(
+    '-lf',
+    dest="listfiles",
+    help="List file links on server. Needs -l",
+    action='store_true'
+)
+argparser.add_argument(
+    '-lu',
+    dest="listurls",
+    help="List shortened urls on server. Needs -l",
+    action='store_true'
+)
+argparser.add_argument(
     '-f',
     dest="file",
+    help="File to upload",
     type=argparse.FileType('rb'),
     default=None
 )
 argparser.add_argument(
     '-t',
     dest="content",
+    help="Content to upload",
     default=None
 )
 argparser.add_argument(
     '-n',
     dest="editable",
+    help="Set non-editable",
     action='store_false'
 )
 argparser.add_argument(
     '-e',
     dest="expiration",
+    help="Set expiration",
     default='never',
     choices=[
             'never',
@@ -43,16 +78,33 @@ argparser.add_argument(
 )
 parsed_args = argparser.parse_args()
 
-if parsed_args.content == None and parsed_args.file == None:
-    print("Nothing to upload")
+if parsed_args.content == None and parsed_args.file == None and not parsed_args.list:
+    print("Nothing to do")
     exit(1)
 
-data = {
-    "expiration": parsed_args.expiration,
-    "content": parsed_args.content,
-    "editable": parsed_args.editable,
-    "syntax-highlight": "none"
-}
-response = requests.post(url+"/upload", files={"file": parsed_args.file}, data=data)
-response.raise_for_status()
-print(response.url)
+if parsed_args.list:
+    response = requests.get(url+"/pastalist")
+    response.raise_for_status()
+    if parsed_args.listpasta:
+        for m in re.findall(url+r"/pasta/[a-z\-]*", response.text):
+            print(m)
+    if parsed_args.listraw:
+        for m in re.findall(url+r"/raw/[a-z\-]*", response.text):
+            print(m)
+    if parsed_args.listfiles:
+        for m in re.findall(url+r"/file/.*\"", response.text):
+            print(m[:-1])
+    if parsed_args.listurls:
+        for m in re.findall(url+r"/url/[a-z\-]*", response.text):
+            print(m[:-1])
+else:
+    data = {
+        "expiration": parsed_args.expiration,
+        "content": parsed_args.content,
+        "editable": parsed_args.editable,
+        "syntax-highlight": "none"
+    }
+    response = requests.post(
+        url+"/upload", files={"file": parsed_args.file}, data=data)
+    response.raise_for_status()
+    print(response.url)
