@@ -1,0 +1,12 @@
+#! /bin/bash
+
+INSTALLDIR=~/.local/bin
+
+case "$1" in
+    install) cp ./mbcli $INSTALLDIR
+    ;;
+    uninstall) rm $INSTALLDIR/mbcli
+    ;;
+    *) echo "usage: make [un]install"
+    ;;
+esac

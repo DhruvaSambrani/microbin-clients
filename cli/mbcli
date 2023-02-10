@@ -96,7 +96,7 @@ if parsed_args.list:
             print(m[:-1])
     if parsed_args.listurls:
         for m in re.findall(url+r"/url/[a-z\-]*", response.text):
-            print(m[:-1])
+            print(m)
 else:
     data = {
         "expiration": parsed_args.expiration,
