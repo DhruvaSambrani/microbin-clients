@@ -7,7 +7,13 @@ import re
 
 url = ""
 with open(os.path.expanduser("~/.config/microbin-clients/server")) as f:
-    url = f.readline().strip()
+    try:
+        url = f.readline().strip()
+        if url[-1] == "/":
+            raise(Exception())
+    except:
+        print("Error trying to read \"~/.config/microbin-clients/server\". Create this file and set the url to the home page of your microbin instance, without a trailing /")
+        exit()
 
 argparser = argparse.ArgumentParser(
     prog="Microbin Client CLI",
